@@ -13,6 +13,16 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+Route::group([
+	'prefix' => 'api'
+], function() {
+	Route::post('/login', [
+		'as' => 'auth.login',
+		'uses' => 'AuthController@login'
+	]);
+
+	Route::get('/products', [
+		'as' => 'product.list',
+		'uses' => 'ProductController@list'
+	]);
 });
