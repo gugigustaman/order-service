@@ -35,7 +35,7 @@ class AuthController extends Controller
         }
 
         if (! $token = auth()->attempt($validator->validated())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         return $this->createNewToken($token);
@@ -79,6 +79,7 @@ class AuthController extends Controller
      */
     protected function createNewToken($token){
         return response()->json([
+            'message' => 'Successfully logged in'
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
