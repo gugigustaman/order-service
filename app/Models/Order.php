@@ -3,12 +3,20 @@
 namespace App\Models;
 
 use App\Exceptions\CustomException;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
     use SoftDeletes;
+
+    protected $fillable = [
+        'user_id'
+    ];
+
+    protected $appends = ['total_price'];
 
     /**
      * Relationship definition of each order has many order details
@@ -16,6 +24,22 @@ class Order extends Model
      */
     public function details() {
     	return $this->hasMany(OrderDetail::class);
+    }
+
+    /**
+     * Accessor definition of total_price
+     * @return float sum of each details total prices
+     */
+    public function getTotalPriceAttribute() {
+        return $this->details()->sum('total_price');
+    }
+
+    /**
+     * Check if this order has items in it
+     * @return boolean true if yes, otherwise false
+     */
+    public function hasItems() {
+        return $this->details()->count() > 0;
     }
 
     /**
@@ -27,6 +51,12 @@ class Order extends Model
     	return $this->details()->where('product_id', $product->id)->first();
     }
 
+    /**
+     * Add Item to cart. if product is not in the cart, create new detail with 0 qty
+     * Then, increase the qty with $qty
+     * @param  Product $product instance of Product that want to be added to cart
+     * @param  integer  $qty     The qty of product that want to be added to cart
+     */
     public function addItem(Product $product, $qty) {
     	$detail = $this->getDetailByProduct($product);
 
@@ -45,6 +75,13 @@ class Order extends Model
     }
 
     
+    /**
+     * Remove Item from cart. if product is not in the cart, throw exception 1501
+     * Otherwise, decrease the qty or even delete the detail 
+     * @param  Product $product instance of Product that want to be removed from cart
+     * @param  integer  $qty     The qty of product that want to be removed from cart
+     * @return mixed           void or exception (no such product in cart)
+     */
     public function removeItem(Product $product, $qty) {
         $detail = $this->getDetailByProduct($product);
 
@@ -61,6 +98,32 @@ class Order extends Model
     }
 
     /**
+     * Pay unpaid order (cart)
+     * @param  String $payment_ref_num reference number of payment
+     * @return mixed                  void or exception (not unpaid order or no items)
+     */
+    public function pay($payment_ref_num) {
+        if ($this->status != 0) {
+            throw new CustomException(1502, 404);
+        }
+
+        if (!$this->hasItems()) {
+            throw new CustomException(1503, 400);
+        }
+
+        $this->payment_ref_num = $payment_ref_num;
+        $this->ref_num = self::newRefNum();
+        $this->paid_at = Carbon::now();
+        $this->status = 1;
+
+        $this->save();
+
+        foreach ($this->details as $detail) {
+            $detail->product->deductStock($detail->qty);
+        }
+    }
+
+    /**
      * Get current cart (order with status 0) or create a new one
      * @param  int $user_id ID of user
      * @return Order          instance of Order with status 0
@@ -70,14 +133,20 @@ class Order extends Model
     	    ->where('status', 0)
     	    ->orderBy('id', 'desc');
 
-        if ($with_detail) {
-            $cart->with('details');
-        }
-
         $cart = $cart->firstOrCreate([
             'user_id' => $user_id
         ]);
 
+        if ($with_detail) { 
+            $cart = $cart->fresh(['details.product']);
+        } else {
+            $cart = $cart->fresh();
+        }
+
     	return $cart;
+    }
+
+    public static function newRefNum() {
+        return strtoupper('INV' . date('ymd') . Str::random(5));
     }
 }

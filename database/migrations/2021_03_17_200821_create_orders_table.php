@@ -17,8 +17,9 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->bigInteger('user_id')->unsigned();
             $table->tinyInteger('status')->default(0);
-            $table->string('ref_num')->default(0);
+            $table->string('ref_num')->nullable();
             $table->datetime('paid_at')->nullable();
+            $table->string('payment_ref_num')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

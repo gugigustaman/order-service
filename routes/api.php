@@ -48,5 +48,10 @@ Route::group([
 			'as' => 'cart.remove_item',
 			'uses' => 'CartController@removeItem'
 		]);
+
+		Route::post('/pay', [
+			'as' => 'cart.pay',
+			'uses' => 'CartController@pay'
+		]);
 	});
 });
