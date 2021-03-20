@@ -77,10 +77,12 @@ You can install the POC by cloning this repo and execute this command to start t
 $ composer install
 ```
 
-After the installation finished, simply copy `.env.example` file to `.env`. Create database and set the database configuration in the `.env` file. Also set the app key for the API.
+After the installation finished, simply copy `.env.example` file to `.env`. Create database and set the database configuration in the `.env` file. Also set the app key and app URL for the API.
 
 ```
 APP_KEY=
+...
+APP_URL=
 ...
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
