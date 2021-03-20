@@ -110,6 +110,11 @@ If you want to run on your local, use this command.
 $ php -S [host]:[port] -t public
 ```
 
+## API Documentation
+
+The API documentation can be accessed on this URL:
+https://documenter.getpostman.com/view/571767/Tz5wVDzR
+
 ## Logging
 
 The API logs are stored at `storage/logs/api-[y-m-d].log` and rotated daily using Lumen log rotator. It logs every request (url, route name and payload of course) and response (payload and HTTP status code) also the timestamp of the logs. I put the logging codes in the `App\Http\Middleware\LogMiddleware`. Every single requests are given id with UUID format for tracking purpose and using `DEBUG` tag.
