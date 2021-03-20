@@ -50,6 +50,13 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+            // return generated error response
+            return response()->json([
+                'message' => 'Resources not found'
+            ], 404);
+        }
+
         // Store log to /storage/logs/api-[y-m-d].log
         Log::channel('api')->error(json_encode([
             'id' => $request->id,
@@ -62,7 +69,7 @@ class Handler extends ExceptionHandler
             ]
         ]));
 
-        // return generatl error response
+        // return generated error response
         return response()->json([
             'message' => 'There\'s something wrong with the system. Please contact us for further information.'
         ], 500);

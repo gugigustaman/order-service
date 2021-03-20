@@ -25,7 +25,7 @@ class LogMiddleware
         $log = [
             'id' => $request->id,
             'url' => $request->url(),
-            'route' => $request->route()[1]['as'],
+            'route' => $request->route() ? $request->route()[1]['as'] : '',
             'req' => $request->all(),
             'res' => $response->getData(),
             'status' => $response->getStatusCode(),
