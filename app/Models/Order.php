@@ -69,6 +69,10 @@ class Order extends Model
     		$detail->save();
     	}
 
+        if ($detail->qty + $qty > $product->stock) {
+            throw new CustomException(1504, 400);
+        }
+
     	$detail->qty += $qty;
 
     	$detail->save();    	

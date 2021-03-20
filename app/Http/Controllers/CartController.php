@@ -52,8 +52,14 @@ class CartController extends Controller
             return $this->sendResourcesNotFound('Product not found');
         }
 
+        if ($product->stock < $request->qty) {
+            return $this->sendInvalidRequest('Insufficient stock');
+        }
+
         try {
             $this->cart->addItem($product, $request->qty);   
+        } catch (CustomException $e) {
+            return $this->sendResponse($e->getMessage(), $e->getCode());
         } catch (\Exception $e) {
             return $this->sendError();
         }
