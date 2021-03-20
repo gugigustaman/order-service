@@ -3,17 +3,17 @@
 This project is created to show how a flash sale on online store should be built regarding case of this precondition and also considering my experience on back-end programming.
 
 **Table of Contents**
-[Precondition](#precondition)
-[Cause](#cause)
-[Requirements](#requirements)
-[Solution](#solution)
-[Stack and Process](#stack-and-process)
-[Database Schema](#database-schema)
-[Installation](#installation)
-[API Documentation](#api-documentation)
-[Logging](#logging)
-[Error Handling](#error-handling)
-[Testing](#testing)
+- [Precondition](#precondition)
+- [Cause](#cause)
+- [Requirements](#requirements)
+- [Solution](#solution)
+- [Stack and Process](#stack-and-process)
+- [Database Schema](#database-schema)
+- [Installation](#installation)
+- [API Documentation](#api-documentation)
+- [Logging](#logging)
+- [Error Handling](#error-handling)
+- [Testing](#testing)
 
 ## Precondition
 
