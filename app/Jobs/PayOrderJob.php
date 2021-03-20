@@ -31,7 +31,10 @@ class PayOrderJob extends Job
     {
         DB::beginTransaction();
         try {
-            $this->order->pay($this->payment_ref_num);
+            if ($this->order->status == 2) {
+                $this->order->pay($this->payment_ref_num);
+            }
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

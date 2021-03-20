@@ -106,6 +106,9 @@ class CartController extends Controller
         if (!$this->cart->hasItems()) {
             return $this->sendInvalidRequest('You have no item in your cart.');
         }
+
+        $this->cart->status = 2;
+        $this->cart->save();
         
         dispatch(new \App\Jobs\PayOrderJob($this->cart, $request->payment_ref_num))
             ->onQueue('order');

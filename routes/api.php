@@ -26,6 +26,11 @@ Route::group([
 		'uses' => 'ProductController@list'
 	]);
 
+	Route::get('/order', [
+		'as' => 'order.list',
+		'uses' => 'OrderController@list'
+	]);
+
 	Route::group(['prefix' => 'cart'], function() {
 		Route::get('/', [
 			'as' => 'cart.detail',
