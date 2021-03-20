@@ -11,7 +11,13 @@ class ProductController extends Controller
         $this->middleware('auth:api');
     }
 
+    /**
+     * Get List of products
+     * Route: [GET] /product
+     * @param  Request $request Instance of Http Request
+     * @return Response           List of products
+     */
     public function list(Request $request) {
-        return Product::all();
+        return response()->json(Product::all());
     }
 }

@@ -20,6 +20,7 @@ class CartController extends Controller
     public function __construct(Request $request) {
         $this->middleware('auth:api');
 
+        // Storing cart as property
         if (auth()->check()) {
             $this->cart = Order::cart(auth()->user()->id);
         }
@@ -32,7 +33,7 @@ class CartController extends Controller
      * @return json of cart object and its details
      */
     public function detail(Request $request) {
-        return Order::cart(auth()->user()->id, true);
+        return response()->json(Order::cart(auth()->user()->id, true));
     }
 
     /**
@@ -98,18 +99,17 @@ class CartController extends Controller
             return $this->sendInvalidRequest();
         }
 
-        DB::beginTransaction();
-        try {
-            $this->cart->pay($request->payment_ref_num);
-            DB::commit();
-        } catch (CustomException $e) {
-            DB::rollback();
-            return $this->sendResponse($e->getMessage(), $e->getCode());
-        } catch (\Exception $e) {
-            DB::rollback();
-            return $this->sendError();
+        if ($this->cart->status != 0) {
+            return $this->sendResourcesNotFound('You have no unpaid order.');
         }
 
-        return $this->sendResponse('Successfully paid the order');
+        if (!$this->cart->hasItems()) {
+            return $this->sendInvalidRequest('You have no item in your cart.');
+        }
+        
+        dispatch(new \App\Jobs\PayOrderJob($this->cart, $request->payment_ref_num))
+            ->onQueue('order');
+
+        return $this->sendResponse('Your request is being processed.', 202);
     }
 }

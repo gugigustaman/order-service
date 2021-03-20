@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
+use Log;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
@@ -49,6 +50,21 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        return parent::render($request, $exception);
+        // Store log to /storage/logs/api-[y-m-d].log
+        Log::channel('api')->error(json_encode([
+            'id' => $request->id,
+            'exception' => [
+                'code' => $exception->getCode(),
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                // 'trace' => $exception->getTraceAsString(),
+            ]
+        ]));
+
+        // return generatl error response
+        return response()->json([
+            'message' => 'There\'s something wrong with the system. Please contact us for further information.'
+        ], 500);
     }
 }

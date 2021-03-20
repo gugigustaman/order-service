@@ -103,14 +103,6 @@ class Order extends Model
      * @return mixed                  void or exception (not unpaid order or no items)
      */
     public function pay($payment_ref_num) {
-        if ($this->status != 0) {
-            throw new CustomException(1502, 404);
-        }
-
-        if (!$this->hasItems()) {
-            throw new CustomException(1503, 400);
-        }
-
         $this->payment_ref_num = $payment_ref_num;
         $this->ref_num = self::newRefNum();
         $this->paid_at = Carbon::now();
@@ -146,6 +138,10 @@ class Order extends Model
     	return $cart;
     }
 
+    /**
+     * Generate new order reference number
+     * @return String Order reference number
+     */
     public static function newRefNum() {
         return strtoupper('INV' . date('ymd') . Str::random(5));
     }
