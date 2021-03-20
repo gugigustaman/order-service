@@ -10,6 +10,7 @@ This project is created to show how a flash sale on online store should be built
 [Stack and Process](#stack-and-process)
 [Database Schema](#database-schema)
 [Installation](#installation)
+[API Documentation](#api-documentation)
 [Logging](#logging)
 [Error Handling](#error-handling)
 [Testing](#testing)
@@ -112,7 +113,7 @@ $ php -S [host]:[port] -t public
 
 ## API Documentation
 
-The API documentation can be accessed on this URL:
+The API can be accessed publicly on `https://ordersvc.hereis.my.id` and the documentation can be accessed on this URL:
 https://documenter.getpostman.com/view/571767/Tz5wVDzR
 
 ## Logging
