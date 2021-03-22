@@ -45,7 +45,7 @@ To handle such case there should be a **queue** for processing incoming orders. 
 ### Stack
 Lumen PHP Framework is used for this POC because of it's the best framework for back-end programming I am currently best at and it provides **queue** for handling such case. This POC uses MySQL as the DBMS. All the request and response payload is JSON formatted. The response code is HTTP response status code (not in the response payload). Here is the schema of order processing with the involved technologies.
 
-![Stacks and the process](https://drive.google.com/uc?export=view&id=15WAhHngBTAhkUOsvEByUxQe9lQnHuQnv)
+![Stacks and the process](http://darkrai.hereis.my.id/order-service-schema.jpg)
 
 The cloud messaging service and the publish operation is **not included** in the repository. But I have provided the space where to put publish operations when handling success or failed order processing. It's in the `app\Jobs\PayOrderJob` class.
 
@@ -63,11 +63,11 @@ The cloud messaging service and the publish operation is **not included** in the
 
 Here is the database schema used in this POC. 
 
-![Database ERD](https://drive.google.com/uc?export=view&id=1zIDKmEaOSm0_nMcavrDcr0ggSx_TnuiX)
+![Database ERD](http://darkrai.hereis.my.id/order-service-tables.png)
 
 And because I use database as driver of the Lumen Queue, here are the tables to store the queue.
 
-![enter image description here](https://drive.google.com/uc?export=view&id=1VfaLkuQiNg4gy_RQiHkTnY1DKvbPHGZh)
+![enter image description here](http://darkrai.hereis.my.id/order-service-jobs.png)
 
 
 ## Installation
